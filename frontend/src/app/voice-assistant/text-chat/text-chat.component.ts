@@ -132,6 +132,7 @@ export class TextChatComponent implements OnInit {
           this.showSellRecommendationsWidgetChange.emit(false);
           this.showPortfolioSimulationWidgetChange.emit(false);
           this.investmentRecommendationsChange.emit(res.recommendations);
+          console.log("recommended_ideas:", res.recommendations);
         }
         if (res.action === 'showPositionsToSell') {
           this.showSellRecommendationsWidgetChange.emit(true);
@@ -139,18 +140,20 @@ export class TextChatComponent implements OnInit {
           this.showInvestmentRecommendationsWidgetChange.emit(false);
           this.showPortfolioSimulationWidgetChange.emit(false);
           this.positions_to_sellChange.emit(res.positions_to_sell);
+          console.log("positions_sell:", res.positions_to_sell);
         }
         if (res.action === 'showPortfolioSimulation') {
           this.showPortfolioSimulationWidgetChange.emit(true);
           this.showSellRecommendationsWidgetChange.emit(false);
           this.showPortfolioAnalysisWidgetChange.emit(false);
           this.showInvestmentRecommendationsWidgetChange.emit(false);
-          this.positions_to_sellChange.emit(res.positions_to_sell);
           this.portfolioChange.emit(res.portfolio);
           this.benchmarkChange.emit(res.benchmark);
           this.simulationChange.emit(res.simulation);
-          this.positions_to_sellChange.emit(res.sell_orders);
-          this.investmentRecommendationsChange.emit(res.buy_oders);
+          this.positions_to_sellChange.emit(res.orders_sell);
+          console.log("orders_sell1:", res.orders_sell);
+          this.investmentRecommendationsChange.emit(res.orders_buy);
+          console.log("orders_buy1:", res.orders_buy);
         }
         
       },

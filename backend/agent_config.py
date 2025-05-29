@@ -144,6 +144,7 @@ async def simulate_portfolio(context: RunContextWrapper[PortfolioAgentContext]):
             "next_action": next_actions
     }
     
+    
     return payload
 
 @function_tool
@@ -254,6 +255,8 @@ analysis_agent = Agent[PortfolioAgentContext](
 triage_instructions = (
         f"{RECOMMENDED_PROMPT_PREFIX}"
         "You are a helpful triaging agent. You can use your tools to delegate questions to other appropriate agents."
+        "Delegate to investment_agent when the user ask to recommend investments ideas or recommend sell positions."
+        "Delegate to analysis_agent when the user ask to analyze portfolio or simulate orders."
 )
 
 triage_agent = Agent[PortfolioAgentContext](

@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { InvestmentRecommendation } from '../../models/recommendations.model'; 
 import { Positions } from '../../models/positions.model';
@@ -14,10 +14,15 @@ import { AssetsBreakdownComponent } from '../portfolio-analysis/assets-breakdown
   styleUrl: './portfolio-simulation.component.css'
 })
 
-export class PortfolioSimulationComponent {
+export class PortfolioSimulationComponent implements OnInit {
   @Input() recommendations: InvestmentRecommendation[] = [];
   @Input() positions: Positions[] = [];
   @Input() portfolio!: Portfolio;
   @Input() benchmark!: Portfolio;
   @Input() simulation!: Portfolio;
+
+  ngOnInit(): void {
+    console.log("recommend", this.recommendations);
+    console.log("sell", this.positions);
+  }
 }

@@ -8,9 +8,8 @@ class InvestmentIdea:
     asset_class: str
     currency: str
     duration: str
-    sector: str
-    added: bool = False
-
+    industry: str
+    
     def to_string(self):
         return (
             f"ID: {self.id}; "
@@ -19,6 +18,6 @@ class InvestmentIdea:
             f"Asset Class: {self.asset_class}; "
             f"Currency: {self.currency}; "
             f"Duration: {self.duration}; "
-            f"Sector: {self.sector}"
+            f"Sector: {self.industry}"
         )
     

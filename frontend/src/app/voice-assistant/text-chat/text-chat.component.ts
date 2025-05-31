@@ -5,6 +5,7 @@ import { HttpClient } from '@angular/common/http';
 import { InvestmentRecommendation } from '../../models/recommendations.model';
 import { Portfolio } from '../../models/portfolio.model';
 import { Positions } from '../../models/positions.model';
+import { Client_Preferences } from '../../models/preferences';
 
 export interface Message {
   id: number;
@@ -24,6 +25,7 @@ export interface Message {
 
 export class TextChatComponent implements OnInit {
   @Output() disconnect = new EventEmitter<void>();
+  @Output() loadingChange = new EventEmitter<boolean>();
 
   @Output() showPortfolioSimulationWidgetChange = new EventEmitter<boolean>();
   @Output() simulationChange = new EventEmitter<Portfolio>();
@@ -34,6 +36,7 @@ export class TextChatComponent implements OnInit {
 
   @Output() showInvestmentRecommendationsWidgetChange = new EventEmitter<boolean>();
   @Output() investmentRecommendationsChange = new EventEmitter<InvestmentRecommendation[]>();
+  @Output() preferencesChange = new EventEmitter<Client_Preferences>()
 
   @Output() showSellRecommendationsWidgetChange = new EventEmitter<boolean>();
   @Output() positions_to_sellChange = new EventEmitter<Positions[]>();
@@ -74,6 +77,12 @@ export class TextChatComponent implements OnInit {
 }
 
   handleSendMessage() {
+    this.showInvestmentRecommendationsWidgetChange.emit(false);
+    this.showPortfolioAnalysisWidgetChange.emit(false);
+    this.showSellRecommendationsWidgetChange.emit(false);
+    this.showPortfolioSimulationWidgetChange.emit(false);
+    this.loadingChange.emit(true);
+    
     const text = this.newMessage.trim();
     if (!text) return;
 
@@ -119,34 +128,28 @@ export class TextChatComponent implements OnInit {
         setTimeout(() => this.scrollToBottom(), 50);
 
         if (res.action === 'showPortfolioAnalysis') {
+          this.loadingChange.emit(false);
           this.showPortfolioAnalysisWidgetChange.emit(true);
-          this.showInvestmentRecommendationsWidgetChange.emit(false);
-          this.showSellRecommendationsWidgetChange.emit(false);
-          this.showPortfolioSimulationWidgetChange.emit(false);
           this.portfolioChange.emit(res.portfolio);
           this.benchmarkChange.emit(res.benchmark);
         }
         if (res.action === 'showInvestmentRecommendations') {
+          this.loadingChange.emit(false);
           this.showInvestmentRecommendationsWidgetChange.emit(true);
-          this.showPortfolioAnalysisWidgetChange.emit(false);
-          this.showSellRecommendationsWidgetChange.emit(false);
-          this.showPortfolioSimulationWidgetChange.emit(false);
           this.investmentRecommendationsChange.emit(res.recommendations);
+          this.preferencesChange.emit(res.preferences);
           console.log("recommended_ideas:", res.recommendations);
+          console.log("client preferences:", res.preferences);
         }
         if (res.action === 'showPositionsToSell') {
+          this.loadingChange.emit(false);
           this.showSellRecommendationsWidgetChange.emit(true);
-          this.showPortfolioAnalysisWidgetChange.emit(false);
-          this.showInvestmentRecommendationsWidgetChange.emit(false);
-          this.showPortfolioSimulationWidgetChange.emit(false);
           this.positions_to_sellChange.emit(res.positions_to_sell);
           console.log("positions_sell:", res.positions_to_sell);
         }
         if (res.action === 'showPortfolioSimulation') {
+          this.loadingChange.emit(false);
           this.showPortfolioSimulationWidgetChange.emit(true);
-          this.showSellRecommendationsWidgetChange.emit(false);
-          this.showPortfolioAnalysisWidgetChange.emit(false);
-          this.showInvestmentRecommendationsWidgetChange.emit(false);
           this.portfolioChange.emit(res.portfolio);
           this.benchmarkChange.emit(res.benchmark);
           this.simulationChange.emit(res.simulation);

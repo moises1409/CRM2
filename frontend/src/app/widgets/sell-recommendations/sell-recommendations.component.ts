@@ -22,13 +22,6 @@ export interface Recommendation {
 })
 export class SellRecommendationsComponent {
   @Input() positions: Positions[] = [];
-  
-  getProximityColor(proximity: number): string {
-    if (proximity >= 100) return "uw-badge";           // Styles can be set in CSS
-    if (proximity >= 95) return "uw-badge-light";
-    if (proximity >= 90) return "amber-badge";
-    return "ow-badge";
-  }
 
   getRecommendationBadge(rec: string): string {
     switch (rec) {

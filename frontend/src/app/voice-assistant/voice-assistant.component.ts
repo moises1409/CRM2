@@ -15,6 +15,7 @@ import { Portfolio } from '../models/portfolio.model';
 import { SellRecommendationsComponent } from '../widgets/sell-recommendations/sell-recommendations.component';
 import { Positions } from '../models/positions.model';
 import { PortfolioSimulationComponent } from '../widgets/portfolio-simulation/portfolio-simulation.component';
+import { Client_Preferences } from '../models/preferences';
 
 @Component({
   selector: 'app-voice-assistant',
@@ -35,6 +36,7 @@ export class VoiceAssistantComponent {
   showPortfolioAnalysisWidget: boolean = false;
   showSellRecommendationsWidget: boolean = false;
   showPortfolioSimulationWidget: boolean = false;
+  loading: boolean = false;
 
   investmentRecommendations: InvestmentRecommendation[] = [
     {
@@ -45,10 +47,11 @@ export class VoiceAssistantComponent {
         asset_class: 'Equity',
         currency: 'USD',
         duration: 12,
-        sector: 'Technology',
-        added: false
+        sector: 'Technology'
       },
-      llm_evaluation: 'This is a good investment idea.'
+      llm_evaluation: 'This is a good investment idea.',
+      added: false,
+      percentOfPortfolio: 4
     },
     {
       idea: {
@@ -59,9 +62,10 @@ export class VoiceAssistantComponent {
         currency: 'EUR',
         duration: 6,
         sector: 'Finance',
-        added: false
       },
-      llm_evaluation: 'This is a bad investment idea.'
+      llm_evaluation: 'This is a bad investment idea.',
+      added: false,
+      percentOfPortfolio: 4
     },
     { 
       idea: {
@@ -72,14 +76,20 @@ export class VoiceAssistantComponent {
         currency: 'CHF',
         duration: 24,
         sector: 'Real Estate',
-        added: true
       },
-      llm_evaluation: 'This is an average investment idea.'
+      llm_evaluation: 'This is an average investment idea.',
+      added: false,
+      percentOfPortfolio: 4
     }
     
   ];
 
-  
+  preferences: Client_Preferences = {
+    suitability: 'XXXXXXXX',
+    constraint:'YYYYYYYYYY',
+    activity_notes: 'ZZZZZZZZZZ'
+  };
+
   portfolio: Portfolio = {
     portfolioNumber: '123456', 
     valuation: 1000000,
@@ -127,17 +137,12 @@ export class VoiceAssistantComponent {
   positions_to_sell: Positions[] = [
     {
       name: 'Apple Inc.',
-      ticker: 'AAPL',
       asset_class:'Equities',
       industry: 'HealthCare',
       currency: 'CHF',
-      marketValue: 200000,
       percentOfPortfolio: 20,
-      performance: 10,
-      trend: 'up',
       currentPrice: 150,
       targetPrice: 140,
-      proximity: 95,
       recommendation: 'Sell',
       selection: false
     }
@@ -147,14 +152,8 @@ export class VoiceAssistantComponent {
   userName: string = 'Carlos Sanchez';
   avatarUrl: string = 'assets/avatar.jpg';  
 
-
-
-
   async connectTextChat() {
     this.isSidebarOpen = true;
   }
-
-
-  // New helper to get a display name for the speaker
   
 }

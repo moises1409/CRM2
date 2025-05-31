@@ -4,9 +4,9 @@ benchmark_data = Portfolio(
     id=2,
     portfolioNumber="BENCH-001",
     valuation=950_000,
-    currency="USD",
+    currency="CHF",
     performance=0.1,
-    historicalPerformance=[3.5, 2.7, 1.2, -0.2, 0.1],
+    historicalPerformance=[0, 2.1, 2, -4.7, 0.8],
     weight_assets_breakdown=[
         Weight_AssetBreakdown(asset_class="Cash", percentage=0),
         Weight_AssetBreakdown(asset_class="Bonds", percentage=32),
@@ -22,10 +22,10 @@ benchmark_data = Portfolio(
     ],
     performance_assets_breakdown=[
         Performance_AssetBreakdown(asset_class="Cash", percentage=0),      
-        Performance_AssetBreakdown(asset_class="Bonds", percentage=0.3),
-        Performance_AssetBreakdown(asset_class="Equities", percentage=0.5),
-        Performance_AssetBreakdown(asset_class="Commodities", percentage=0.3),
-        Performance_AssetBreakdown(asset_class="Hedge Fund", percentage=-1.5),
+        Performance_AssetBreakdown(asset_class="Bonds", percentage=0.2),
+        Performance_AssetBreakdown(asset_class="Equities", percentage=0.7),
+        Performance_AssetBreakdown(asset_class="Commodities", percentage=0.8),
+        Performance_AssetBreakdown(asset_class="Hedge Fund", percentage=-1.3),
         Performance_AssetBreakdown(asset_class="Real Estate", percentage=0.4),
     ]
 )

@@ -5,7 +5,7 @@ from dataclasses import asdict
 from embeddings import search_recommended_ideas
 from evaluation import llm_investments_evaluation
 
-from data.portfolio import Portfolio, Position
+from data.portfolio import Portfolio, Position, Weight_AssetBreakdown
 from data.investmentIdea import InvestmentIdea
 from data.client_preferences import InvestmentPreferences
 from data.recommend_ideas import RecommendIdeas
@@ -15,6 +15,7 @@ from agents.extensions.handoff_prompt import RECOMMENDED_PROMPT_PREFIX
 from pydantic import BaseModel
 from typing import List
 import json
+import copy
 
 class PortfolioAgentContext(BaseModel):
     portfolio: Portfolio | None = None
@@ -57,6 +58,7 @@ async def search_investment_ideas(context: RunContextWrapper[PortfolioAgentConte
     analysis = context.context.portfolio_analysis
     asset_analysis = context.context.asset_class_analysis
     if user_preferences:
+        context.context.investment_preferences.activity_notes = user_preferences
         preferences = user_preferences
         pre_prompt = (
             f"Client preferences: {preferences}. "
@@ -94,11 +96,13 @@ async def search_investment_ideas(context: RunContextWrapper[PortfolioAgentConte
                 "idea": idea_dict,
                 "llm_evaluation": evaluation
             })
-    next_actions = ["Recommend positions to sell", "Simulate orders"]
+    next_actions = ["Recommend positions to sell", "Simulate orders in portfolio"]
     context.context.recommended_ideas = final_recommendations
+    preferences = context.context.investment_preferences
     payload = {
             "action": "showInvestmentRecommendations",
             "recommendations": final_recommendations,
+            "preferences": asdict(preferences) if preferences else None,
             "answer": "Here are the investement ideas that best fit with your client situation.",
             "next_action": next_actions
         }
@@ -112,7 +116,7 @@ async def recommend_position_tosell(context: RunContextWrapper[PortfolioAgentCon
     """
     positions_tosell= context.context.portfolio.positions
     context.context.recommend_position_tosell = positions_tosell
-    next_actions = ["Simulate orders", "schedule meeting"]
+    next_actions = ["Simulate orders in portfolio", "schedule meeting"]
     payload = {
             "action": "showPositionsToSell",
             "answer": "Here are the recommended positions to sell in client portfolio",
@@ -127,6 +131,17 @@ async def simulate_portfolio(context: RunContextWrapper[PortfolioAgentContext]):
     """
     Simulate orders in client portfolio
     """
+    simulation = copy.deepcopy(context.context.portfolio)
+    
+    simulation.weight_assets_breakdown = [
+        Weight_AssetBreakdown(asset_class="Cash", percentage=1),
+        Weight_AssetBreakdown(asset_class="Bonds", percentage=29),
+        Weight_AssetBreakdown(asset_class="Equities", percentage=47),
+        Weight_AssetBreakdown(asset_class="Commodities", percentage=3),
+        Weight_AssetBreakdown(asset_class="Hedge Fund", percentage=3),
+        Weight_AssetBreakdown(asset_class="Real Estate", percentage=17),
+    ]
+
     portfolio = context.context.portfolio
     benchmark = context.context.benchmark
     orders_buy = context.context.recommended_ideas
@@ -137,8 +152,8 @@ async def simulate_portfolio(context: RunContextWrapper[PortfolioAgentContext]):
             "action": "showPortfolioSimulation",
             "answer": "Here the simulation of the client portfolio with the orders selected",
             "portfolio": asdict(portfolio) if portfolio else None,
-            "benchmark": asdict(benchmark) if portfolio else None,
-            "simulation": asdict(benchmark) if portfolio else None,
+            "benchmark": asdict(benchmark) if benchmark else None,
+            "simulation": asdict(simulation) if simulation else None,
             "orders_buy": orders_buy,
             "orders_sell": [asdict(pos) for pos in orders_sell] if orders_sell else None,
             "next_action": next_actions
@@ -189,7 +204,7 @@ async def analyze_portfolio(context: RunContextWrapper[PortfolioAgentContext]):
         "action": "showPortfolioAnalysis",
         "answer": summary,
         "portfolio": asdict(portfolio) if portfolio else None,
-        "benchmark": asdict(benchmark) if portfolio else None,
+        "benchmark": asdict(benchmark) if benchmark else None,
         "next_action": next_actions
     }
     
@@ -272,5 +287,8 @@ def run_agent_sync(user_input, context):
     asyncio.set_event_loop(loop)
     #context = PortfolioAgentContext(portfolio=portfolio_data, benchmark=benchmark_data, investment_ideas=investment_ideas, investment_preferences=client_preferences_data)  # Pass initial portfolio
     with trace("Chat investments"):
-        result = loop.run_until_complete(Runner.run(triage_agent, input=input_items, context=context))
+        try:
+            result = loop.run_until_complete(Runner.run(triage_agent, input=input_items, context=context))
+        except Exception as e:
+            print({"error": str(e)}), 500
     return result.final_output, context

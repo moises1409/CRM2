@@ -6,36 +6,23 @@
           <div class="card">
             <div class="card-header pb-3 flex items-center justify-between">
               <div>
-                <h2 class="card-title text-xl">Personalized Investment Ideas</h2>
-                <p class="card-description">
-                  Recommendations tailored to Michael Johnson's portfolio and investment profile
-                </p>
+                <h2 class="card-title text-xl">Client Preferences</h2>
+                
               </div>
               <span class="star-icon">★</span>
             </div>
             <div class="card-content">
               <p class="text-sm text-muted-foreground">
-                Based on your client's current portfolio allocation, risk tolerance, and investment goals, 
-                we've identified the following opportunities that may enhance overall performance while addressing 
-                the current overweight in equities and underweight in fixed income.
+                Client preferences from activity notes: {{preferences.activity_notes}}
+              </p>
+              <p class="text-sm text-muted-foreground">
+                Client suitability: {{preferences.suitability}}
+              </p>
+              <p class="text-sm text-muted-foreground">
+                Client investment constraint: {{preferences.constraint}}
               </p>
             </div>
           </div>
-  
-          <!-- Investment ideas carousel (simplified with cards for Angular) -->
-          <!--div class="investment-ideas">
-            <div *ngFor="let idea of investmentIdeas" class="investment-idea-card">
-              <h3>{{ idea.title }} ({{ idea.sector }})</h3>
-              <p>{{ idea.description }}</p>
-              <p><strong>Rationale:</strong> Porque yo lo valgo</p>
-              <ul>
-                <li><strong>Expected Return:</strong> 9-11% Return</li>
-                <li><strong>currency:</strong> {{ idea.currency }}</li>
-                <li><strong>Time Horizon:</strong> {{ idea.duration }}</li>
-                <li><strong>Sector</strong> {{ idea.sector }}</li>
-              </ul>
-            </div>
-          </div-->
 
           <div class="products-grid">
             <div class="product-card" *ngFor="let product of recommendations">
@@ -45,10 +32,10 @@
                 <p class="product-description">{{product.idea.description}}</p>
                 <p class="product-description">{{product.llm_evaluation}}</p>
                 <p class="product-price"> {{ product.idea.asset_class }}</p>
-                <button class="add-to-cart-btn" type="button" *ngIf="!product.idea.added">
+                <button class="add-to-cart-btn" type="button" *ngIf="!product.added" (click)="addToCart(product)">
                   Add to Cart
                 </button>
-                <button class="added-btn" type="button" *ngIf="product.idea.added">
+                <button class="added-btn" type="button" *ngIf="product.added">
                   &#10003; Added
                 </button>
                   

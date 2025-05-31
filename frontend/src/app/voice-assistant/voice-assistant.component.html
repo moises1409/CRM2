@@ -7,7 +7,7 @@
     <!-- <h2>Voice Assistant</h2> -->
     
     <div *ngIf="showInvestmentsRecommendationsWidget">
-      <app-investment-recommendations [recommendations]="investmentRecommendations"></app-investment-recommendations>
+      <app-investment-recommendations [recommendations]="investmentRecommendations" [preferences]="preferences"></app-investment-recommendations>
     </div>
     <div *ngIf="showPortfolioAnalysisWidget">
       <app-portfolio-analysis [portfolio]="portfolio" [benchmark]="benchmark"></app-portfolio-analysis>
@@ -24,6 +24,9 @@
         [simulation]="simulation">
       </app-portfolio-simulation>
     </div>
+    <div *ngIf="loading" class="spinner-container">
+      <div class="spinner"></div>
+    </div>
   </div>
   
   <div class="sidebar" *ngIf="isSidebarOpen">
@@ -34,6 +37,7 @@
     ></app-sidebar-->
     
     <app-text-chat 
+    (loadingChange)="loading = $event"
     (showPortfolioSimulationWidgetChange)="showPortfolioSimulationWidget = $event"
     (simulationChange)="simulation = $event"
     (showPortfolioAnalysisWidgetChange)="showPortfolioAnalysisWidget = $event"
@@ -41,6 +45,7 @@
     (benchmarkChange)="benchmark = $event"
     (showInvestmentRecommendationsWidgetChange)="showInvestmentsRecommendationsWidget = $event"
     (investmentRecommendationsChange)="investmentRecommendations = $event"
+    (preferencesChange)="preferences = $event"
     (showSellRecommendationsWidgetChange)="showSellRecommendationsWidget = $event"
     (positions_to_sellChange)="positions_to_sell = $event"
     ></app-text-chat>

@@ -19,7 +19,7 @@
                 
               </div>
               <span class="allocation-badge">
-                5%
+                {{ticker.percentOfPortfolio}}%
               </span>
             </li>
           </ul>
@@ -38,21 +38,22 @@
           <ul class="sell-list">
             <li *ngFor="let ticker of positions" class="row">
               <div>
-                <span class="font-medium">{{ ticker.ticker }}</span>
+                <span class="font-medium">{{ ticker.name }}</span>
                 <span class="ml-2 text-sm text-muted-foreground">
                   {{ ticker.name || 'Position' }}
                 </span>
               </div>
-              <span class="proceeds-value">
-                ${{ ticker?.marketValue?.toLocaleString() || '—' }}
+              <span class="allocation-badge">
+                {{ ticker.percentOfPortfolio }}%
               </span>
+              
             </li>
-            <li class="row proceeds-total">
+            <!--li class="row proceeds-total">
               <span class="font-medium">Total Proceeds</span>
               <span class="font-medium">
                 $10000
               </span>
-            </li>
+            </li-->
           </ul>
         </ng-container>
         <ng-template #noSell>

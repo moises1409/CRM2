@@ -6,5 +6,4 @@ export interface InvestmentIdea {
   currency: string; // e.g., "Low", "Medium", "High"
   duration: number; // in percentage
   sector: string; // e.g., "Short-term", "Medium-term", "Long-term"
-  added?: boolean;
 }

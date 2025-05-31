@@ -6,7 +6,7 @@ from .investmentIdea import InvestmentIdea
 def load_investment_ideas_from_csv(path: str) -> list[InvestmentIdea]:
     ideas: list[InvestmentIdea] = []
     with open(path, newline='', encoding='utf-8') as f:
-        reader = csv.DictReader(f)
+        reader = csv.DictReader(f, delimiter=';')
         for row in reader:
             ideas.append(InvestmentIdea(
                 id=int(row['id']),
@@ -15,8 +15,7 @@ def load_investment_ideas_from_csv(path: str) -> list[InvestmentIdea]:
                 asset_class=row['asset_class'],
                 currency=row['currency'],
                 duration=row['duration'],
-                sector=row['sector'],
-                added=row['added'].strip().lower() in ('true', '1', 'yes')
+                industry=row['industry'],
             ))
     return ideas
 

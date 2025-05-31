@@ -33,22 +33,3 @@ def llm_investments_evaluation(prompt: str) -> str:
         logger.error(f"OpenAI API call failed: {e}")
         return "Sorry, I couldn't process the evaluation at this time."
 
-def llm_ptf_analysis(prompt: str) -> str:
-    """
-    Calls OpenAI's GPT model asynchronously and returns the response text.
-    """
-    try:
-        response = client.beta.chat.completions.parse(
-            model="gpt-4.1",
-            messages=[
-                {"role": "system", "content": "You are a helpful assistant for portfolio analysis."},
-                {"role": "user", "content": prompt}
-            ],
-            max_tokens=256,
-            temperature=0.2,
-            response_format=PortfolioAnalysis,
-        )
-        return response.choices[0].message.content.strip()
-    except Exception as e:
-        logger.error(f"OpenAI API call failed: {e}")
-        return "Sorry, I couldn't process the evaluation at this time."

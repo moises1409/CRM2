@@ -37,14 +37,12 @@ class Performance_AssetBreakdown:
 @dataclass
 class Position:
     name: str
-    ticker: str
     asset_class: str
     industry: str
     currency: str
-    marketValue: float
-    percentOfPortfolio: float
-    performance: float
-    trend: Literal['up', 'down']
+    marketValue: Optional[float] = None
+    percentOfPortfolio: Optional[float] = None
+    performance: Optional[float] = None
     currentPrice: Optional[float] = None
     targetPrice: Optional[float] = None
     proximity: Optional[float] = None
@@ -53,9 +51,9 @@ class Position:
 
 
     def to_string(self):
-        return (f"{self.name} ({self.ticker}) - Value: {self.marketValue}, "
-                f"Asset_Class: {self.asset_class}, Sector {self.industry}," 
-                f"Currency {self.currency}, Weight: {self.percentOfPortfolio}%, Perf: {self.performance}%, Trend: {self.trend}")
+        return (f"{self.name} - Value: {self.marketValue}, "
+                f"Asset_Class: {self.asset_class}, Industry {self.industry}," 
+                f"Currency {self.currency}, Weight: {self.percentOfPortfolio}%, Perf: {self.performance}%")
 
 @dataclass
 class Portfolio:
